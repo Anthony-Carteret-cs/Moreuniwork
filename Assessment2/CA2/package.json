@@ -1,0 +1,19 @@
+{
+  "name": "ca2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "corepack": "^0.34.6",
+    "express": "^5.2.1",
+    "npm": "^11.9.0",
+    "socket.io": "^4.8.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
