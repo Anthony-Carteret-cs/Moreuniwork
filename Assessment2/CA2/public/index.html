@@ -4,15 +4,48 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Home page</title>
+        <title>Introduction</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="css/demo.css">
+        <link rel="stylesheet" href="css/demo.css"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <p>This is the home page</p>
 
-        <p><a href = "chat.html">Chat</a></p>
+        <div class="bg"></div>
+        <div class="bg-text">
+            <h1>Hi, I'm Anthony Carteret</h1>
+            <p> And I am a student of UoA</p>
+        </div>
+    
+
+        <div class="jumbotron text-center">
+            <h2>Welcome to my website</h2>
+            <p>IF you would life to access my chat, please click the link below.</p>
+            
+        <div class= "Modal">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                Open Chat
+            </button>
+
+            <div class="modal" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h4 class="modal-title">Are you sure you want to open the chat?</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <div class="modal-body">
+                            <a href="chat.html" class="btn btn-info" role="button">Yes, I am sure.</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <script src="js/client.js" async defer></script>
      
