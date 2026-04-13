@@ -80,8 +80,8 @@ const addNewMessage = ({ user, message }) => {
   <div class="outgoing__message">
     <div class="sent__message">
       <div class="message__info">
-        <span class="time_date">${formattedTime}</span>
-        <p>${message} - <span class="message__author">${user}</span></p>
+        <span class="message__author">${user}</span> - <span class="time_date">${formattedTime}</span>
+        <p>${message}</p>
       </div>
     </div>
   </div>`;
