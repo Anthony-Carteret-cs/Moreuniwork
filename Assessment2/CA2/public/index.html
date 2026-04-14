@@ -21,34 +21,49 @@
         </div>
     
 
-        <div class="jumbotron text-center">
+        <div class="container-fluid text-center bg-1">
             <h2>Welcome to my website</h2>
             <p>IF you would life to access my chat, please click the link below.</p>
             
-        <div class= "Modal">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                Open Chat
-            </button>
+            <div class= "Modal">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    Open Chat
+                </button>
 
-            <div class="modal" id="myModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+                <div class="modal" id="myModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
 
-                        <div class="modal-header">
-                            <h4 class="modal-title">Are you sure you want to open the chat?</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
+                            <div class="modal-header">
+                                <h4 class="modal-title">Are you sure you want to open the chat?</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
 
-                        <div class="modal-body">
-                            <a href="chat.html" class="btn btn-info" role="button">Yes, I am sure.</a>
+                            <div class="modal-body">
+                                <a href="chat.html" class="btn btn-info" role="button">Yes, I am sure.</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+        <div class="container-fluid text-center bg-2">
+            <h3>Let me introduce myself</h3>
+            <a href="About.html">
+                <img src="Images/Profile.jpg" class="img-thumbnail margin" alt="Profile" width="200" height="200">
+            </a>
+            <p> That lovely specimen of a person right above is me! I'm Anthony and I am currently studying Computer Science at the University of Aberdeen. I like playing video games and watching night sky views hence the background Image above. If you want to know more, <b> Click the image above to learn more about me!</b></p>
+
+        </div>
+        <div class="container-fluid text-center bg-3">
+            <h3>Thank you for visiting my website</h3>
+            <p> Links which helped developing this website:</p>
+            <p><a href="https://www.w3schools.com/html/html_css.asp">w3schools</a></p>
+            <p><a href="https://socket.io/docs/v4/tutorial/">Socket.IO Documentation</a></p>
+        </div>
         <script src="js/client.js" async defer></script>
      
 
     </body>
+
 </html>
