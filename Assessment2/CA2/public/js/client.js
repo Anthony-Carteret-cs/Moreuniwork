@@ -47,9 +47,11 @@ newUserConnected();
 
 //when a new user event is detected
 socket.on("new user", function (data) {
-  data.map(function (user) {
-          return addToUsersBox(user);
-      });
+  if (Array.isArray(data)) {
+    data.forEach(user => addToUsersBox(user));
+  } else {
+    addToUsersBox(data);
+  }
 });
 
 //when a user leaves
@@ -61,6 +63,27 @@ socket.on("user disconnected", function (userName) {
 const inputField = document.querySelector(".message_form__input");
 const messageForm = document.querySelector(".message_form");
 const messageBox = document.querySelector(".messages__history");
+
+const typingIndicator = document.getElementById('typing-indicator');
+
+let typingTimeout;
+
+   // Handle typing events
+   messageInput.addEventListener('input', () => {
+     // User is typing
+     if (!typingTimeout) {
+         socket.emit('typing', true);
+     }
+    
+     // Clear previous timeout
+     clearTimeout(typingTimeout);
+    
+     // Set a timeout to indicate user stopped typing
+     typingTimeout = setTimeout(() => {
+         socket.emit('typing', false);
+         typingTimeout = null;
+     }, 1000);
+   });
 
 const addNewMessage = ({ user, message }) => {
   const time = new Date();
@@ -86,6 +109,7 @@ const addNewMessage = ({ user, message }) => {
     </div>
   </div>`;
 
+
   //is the message sent or received
   messageBox.innerHTML += user === userName ? myMsg : receivedMsg;
 };
@@ -95,11 +119,27 @@ messageForm.addEventListener("submit", (e) => {
   if (!inputField.value) {
     return;
   }
+  
+  if (typingTimeout) {
+      clearTimeout(typingTimeout);
+      typingTimeout = null;
+      socket.emit('typing', false);
+    }
 
   socket.emit("chat message", {
     message: inputField.value,
     nick: userName,
   });
+
+  socket.on('typing users', (usernames) => {
+     const typingUsers = usernames.filter(u => u !== currentUsername);
+     if (typingUsers.length > 0) {
+         typingIndicator.textContent = `${typingUsers.join(', ')} ${typingUsers.length > 1 ? 'are' : 'is'} typing...`;
+         typingIndicator.style.display = 'block';
+     } else {
+         typingIndicator.style.display = 'none';
+     }
+   });
 
   inputField.value = "";
 });
@@ -107,3 +147,12 @@ messageForm.addEventListener("submit", (e) => {
 socket.on("chat message", function (data) {
   addNewMessage({ user: data.nick, message: data.message });
 });
+
+socket.on("user disconnected", function (userName) {
+  addNewMessage({ user: "System", message: `${userName} has left the chat` });
+});
+
+socket.on("new user", function (userName) {
+  addNewMessage({ user: "System", message: `${userName} has joined the chat` });
+});
+

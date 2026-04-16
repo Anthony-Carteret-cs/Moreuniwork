@@ -44,6 +44,21 @@
     background-color: #ddd;
     color: black;
   }
+
+  /* style of typing indicator */
+#typing-indicator {
+         color: #666;
+         font-style: italic;
+         font-size: 0.9em;
+         padding: 5px 10px;
+         display: none;
+   }
+
+   .typing {
+         color: #666;
+         font-size: 0.8em;
+         font-style: italic;
+   }
   
   /* Style the content */
   .content {
