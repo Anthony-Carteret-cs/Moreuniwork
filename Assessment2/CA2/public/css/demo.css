@@ -63,6 +63,8 @@
     -webkit-filter: blur(8px);
   }
 
+
+
 .bg-text {
   background-color: rgb(0,0,0); 
   background-color: rgba(0,0,0, 0.4); 
@@ -77,6 +79,11 @@
   width: 80%;
   padding: 20px;
   text-align: center;
+}
+
+.modal-title {
+    color: black;
+
 }
 
 /* Style the backgrounds of each section of the website */
