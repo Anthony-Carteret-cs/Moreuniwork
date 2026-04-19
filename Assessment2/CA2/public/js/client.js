@@ -1,51 +1,35 @@
-//required for front end communication between client and server
-
 const socket = io();
 
 const inboxPeople = document.querySelector(".inbox__people");
-
+const inputField = document.querySelector(".message_form__input");
+const messageForm = document.querySelector(".message_form");
+const messageBox = document.querySelector(".messages__history");
+const typingIndicator = document.getElementById('typing-indicator');
 
 let userName = "";
-let id;
-const newUserConnected = function (data) {
-    
+let typingTimeout;
 
-    //give the user a random unique id
-    id = Math.floor(Math.random() * 1000000);
-    userName = 'user-' +id;
-    //console.log(typeof(userName));   
-    
-
-    //emit an event with the user id
-    socket.emit("new user", userName);
-    //call
-    addToUsersBox(userName);
+const newUserConnected = function () {
+  const id = Math.floor(Math.random() * 1000000);
+  userName = 'user-' + id;
+  socket.emit("new user", userName);
+  addToUsersBox(userName);
 };
 
 const addToUsersBox = function (userName) {
-    //This if statement checks whether an element of the user-userlist
-    //exists and then inverts the result of the expression in the condition
-    //to true, while also casting from an object to boolean
-    if (!!document.querySelector(`.${userName}-userlist`)) {
-        return;
-    
-    }
-    
-    //setup the divs for displaying the connected users
-    //id is set to a string including the username
-    const userBox = `
+  if (!!document.querySelector(`.${userName}-userlist`)) {
+    return;
+  }
+  const userBox = `
     <div class="chat_id ${userName}-userlist">
       <h5>${userName}</h5>
     </div>
   `;
-    //set the inboxPeople div with the value of userbox
-    inboxPeople.innerHTML += userBox;
+  inboxPeople.innerHTML += userBox;
 };
 
-//call 
 newUserConnected();
 
-//when a new user event is detected
 socket.on("new user", function (data) {
   if (Array.isArray(data)) {
     data.forEach(user => addToUsersBox(user));
@@ -54,50 +38,42 @@ socket.on("new user", function (data) {
   }
 });
 
-//when a user leaves
 socket.on("user disconnected", function (userName) {
-  document.querySelector(`.${userName}-userlist`).remove();
+  const el = document.querySelector(`.${userName}-userlist`);
+  if (el) el.remove();
 });
-
-
-const inputField = document.querySelector(".message_form__input");
-const messageForm = document.querySelector(".message_form");
-const messageBox = document.querySelector(".messages__history");
 
 const addNewMessage = ({ user, message }) => {
   const time = new Date();
   const formattedTime = time.toLocaleString("en-US", { hour: "numeric", minute: "numeric" });
 
   const receivedMsg = `
-  <div class="incoming__message">
-    <div class="received__message">
-      <div class="message__info">
-        <span class="time_date">${formattedTime}</span>
-        <p>${message} - <span class="message__author">${user}</span></p>
+    <div class="incoming__message">
+      <div class="received__message">
+        <div class="message__info">
+          <span class="time_date">${formattedTime}</span>
+          <p>${message} - <span class="message__author">${user}</span></p>
+        </div>
       </div>
-    </div>
-  </div>`;
+    </div>`;
 
   const myMsg = `
-  <div class="outgoing__message">
-    <div class="sent__message">
-      <div class="message__info">
-        <span class="message__author">${user}</span> - <span class="time_date">${formattedTime}</span>
-        <p>${message}</p>
+    <div class="outgoing__message">
+      <div class="sent__message">
+        <div class="message__info">
+          <span class="message__author">${user}</span> - <span class="time_date">${formattedTime}</span>
+          <p>${message}</p>
+        </div>
       </div>
-    </div>
-  </div>`;
+    </div>`;
 
-
-  //is the message sent or received
   messageBox.innerHTML += user === userName ? myMsg : receivedMsg;
+  messageBox.scrollTop = messageBox.scrollHeight;
 };
 
 messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (!inputField.value) {
-    return;
-  }
+  if (!inputField.value.trim()) return;
 
   socket.emit("chat message", {
     message: inputField.value,
@@ -105,9 +81,46 @@ messageForm.addEventListener("submit", (e) => {
   });
 
   inputField.value = "";
+
+  if (typingTimeout) {
+    clearTimeout(typingTimeout);
+    typingTimeout = null;
+    socket.emit("typing", false);
+  }
 });
 
 socket.on("chat message", function (data) {
   addNewMessage({ user: data.nick, message: data.message });
 });
 
+inputField.addEventListener("input", () => {
+  console.log("Input detected, typing timeout:", typingTimeout);
+
+  if (!typingTimeout) {
+    console.log("Emitting typing: true");
+    socket.emit("typing", true);
+  }
+
+  clearTimeout(typingTimeout);
+
+  typingTimeout = setTimeout(() => {
+    console.log("Emitting typing: false");
+    socket.emit("typing", false);
+    typingTimeout = null;
+  }, 1000);
+});
+
+socket.on("typing users", (userlist) => {
+  console.log("Received typing users:", userlist);
+  console.log("Current userName:", userName);
+
+  const typingUsers = userlist.filter(u => u !== userName);
+  console.log("Filtered typing users:", typingUsers);
+
+  if (typingUsers.length > 0) {
+    typingIndicator.textContent = `${typingUsers.join(', ')} ${typingUsers.length > 1 ? 'are' : 'is'} typing...`;
+    typingIndicator.style.display = 'block';
+  } else {
+    typingIndicator.style.display = 'none';
+  }
+});
